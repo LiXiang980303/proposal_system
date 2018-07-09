@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="../css/signin.css">
+
+    <!-- js -->
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../js/ui/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/common/common.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <form id="login-form" class="form-signin">
+        <h2 class="form-signin-heading">清输入</h2>
+
+        <label for="inputLoginName" class="sr-only">LoginName</label>
+        <input id="inputLoginName" name="loginName" class="form-control" placeholder="LoginName" required autofocus>
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+
+
+
+        <button id="inputSubmit" class="btn btn-lg btn-primary btn-block" onclick="validateUserInfo(); return false">提交</button>
+
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    function validateUserInfo() {
+        var url = getRootPath() + '/loginAction/signin';
+
+        var params = {
+            'loginName': $('#inputLoginName').val(),
+            'password': $('#inputPassword').val()
+        }
+
+        var data = $("#login-form").serialize();
+
+//        $.post(url, params, function (data) {
+//            alert(data);
+//        });
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: false,
+            data: params,
+//            data: data.serialize(),
+            dataType: 'json',
+            error: function (result) {
+                alert(result.resultMsg);
+            },
+            success: function (result) {
+                alert(result.resultMsg);
+                if (result.resultCode == 'success') {
+                    window.location.href = 'domain/dashboard-1.html';
+                }
+            }
+        });
+    }
+
+    function registUser() {
+        window.href = getRootPath() + '/register.html';
+    }
+</script>
+
+</body>
+</html>

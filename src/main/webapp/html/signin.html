@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>欢迎使用</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css">-->
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="../css/signin.css">
+
+    <!-- js -->
+    <!--<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>-->
+    <!--<script type="text/javascript" src="../js/ui/bootstrap/js/bootstrap.min.js"></script>-->
+    <script type="text/javascript" src="../js/common/common.js"></script>
+
+    <!--local-->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/angular.min.js"></script>
+
+    <!--online-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">规范文档管理系统</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><input class="form-control" style="margin-top: 8px; margin-left: 5px;" id="inputLoginName"
+                           placeholder="用户名"/></li>
+                <li><input class="form-control" style="margin-top: 8px; margin-left: 5px;" id="inputPassword"
+                           placeholder="密码" type="password"/></li>
+                <li><a href="#" onclick="validateUserInfo(); return false"><span
+                        class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#myModal"><span
+                        class="glyphicon glyphicon-user"></span> 注册</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div ng-app="myApp" ng-controller="myCtrl">
+
+        <span>规范列表</span>
+
+        <ul class="list-group">
+            <li ng-repeat="info in proposalList" class="list-group-item">
+                <span style="text-align: left;">{{info.infoName}}</span>
+                <span class="badge">新</span>
+                <span style="float: right; margin-right: 5px;">{{info.submitTime | date:'yyyy-MM-dd hh:mm:ss'}}</span>
+            </li>
+        </ul>
+
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        入会申请
+                    </h4>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="iptRegName" class="col-sm-3 control-label">姓名</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegName" name="iptRegName" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegSex" class="col-sm-3 control-label">性别</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegSex" name="iptRegSex" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegBirth" class="col-sm-3 control-label">出生年月</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegBirth" name="iptRegBirth" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegAdd" class="col-sm-3 control-label">家庭住址</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegAdd" name="iptRegAdd" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegPhone" class="col-sm-3 control-label">联系方式</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegPhone" name="iptRegPhone" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegRef" class="col-sm-3 control-label">推荐人</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegRef" name="iptRegRef" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegHyfh" class="col-sm-3 control-label">行业分会</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegHyfh" name="iptRegHyfh" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegZwh" class="col-sm-3 control-label">专委会</label>
+                        <div class="col-sm-9">
+                            <input id="iptRegZwh" name="iptRegZwh" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="iptRegPsw" class="col-sm-3 control-label">密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" id="iptRegPsw" name="iptRegPsw" class="form-control" required>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitReg(); return false">提交</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" onclick="clearInfo(); return false">清空</button>
+                </div>
+
+                <div>
+                    <span>
+                        备注：申请内容下啦选择想要申请的行业分会及对应的专委会
+                    </span>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+
+<script type="text/javascript">
+    function validateUserInfo() {
+        var url = getRequestPath() + '/login/signin';
+
+        console.log(url);
+
+        var params = {
+            'loginName': $('#inputLoginName').val(),
+            'password': $('#inputPassword').val()
+        }
+
+        console.log(params);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: false,
+            data: params,
+            dataType: 'json',
+            error: function (data) {
+                alert(data.resultMesg);
+            },
+            success: function (data) {
+                alert(data.resultMesg);
+                var url = '/html/index.html';
+                if (data.resultCode == 'success') {
+                    window.location.href = getRequestPath() + url;
+                }
+            }
+        });
+    }
+
+    function submitReg() {
+
+        // validate
+        var validatorRequire = '必须录入';
+        if (isEmpty($('#iptRegName').val())) {
+            alert('用户名' + validatorRequire);
+            return;
+        }
+        if (isEmpty($('#iptRegPsw').val())) {
+            alert('密码' + validatorRequire);
+            return;
+        }
+        if (isEmpty($('#iptRegSex').val())) {
+            alert('性别' + validatorRequire);
+            return;
+        }
+        if (isEmpty($('#iptRegBirth').val())) {
+            alert('出生年月' + validatorRequire);
+            return;
+        }
+        if (isEmpty($('#iptRegPhone').val())) {
+            alert('联系方式' + validatorRequire);
+            return;
+        }
+        if (isEmpty($('#iptRegHyfh').val())) {
+            alert('行业分会' + validatorRequire);
+            return;
+        }
+        if (isEmpty($('#iptRegZwh').val())) {
+            alert('专委会' + validatorRequire);
+            return;
+        }
+
+
+        var url = getRequestPath() + '/login/register';
+
+        console.log(url);
+
+        var params = {
+            'userName': $('#iptRegName').val(),
+            'sex': $('#iptRegSex').val(),
+            'birth': $('#iptRegBirth').val(),
+            'address': $('#iptRegAdd').val(),
+            'userPhone': $('#iptRegPhone').val(),
+            'refer': $('#iptRegRef').val(),
+            'industryBranch': $('#iptRegHyfh').val(),
+            'specialCommittee': $('#iptRegZwh').val(),
+            'password': $('#iptRegPsw').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: false,
+            data: params,
+            dataType: 'json',
+            error: function (data) {
+                alert(data.resultMesg);
+            },
+            success: function (data) {
+                alert(data.resultMesg);
+                $('#myModal').modal('hide')
+            }
+        });
+    }
+
+    function clearInfo() {
+        $('#iptRegName').val('');
+        $('#iptRegSex').val('');
+        $('#iptRegBirth').val('');
+        $('#iptRegAdd').val('');
+        $('#iptRegPhone').val('');
+        $('#iptRegRef').val('');
+        $('#iptRegHyfh').val('');
+        $('#iptRegZwh').val('');
+    }
+
+    $(function () {
+        console.log("加载完成");
+    });
+
+</script>
+
+<script type="text/javascript">
+    var app = angular.module("myApp", []);
+    app.controller("myCtrl", function ($scope) {
+        $scope.name = "张三";
+        $scope.proposalList = {};
+
+        $scope.getProposalList = function () {
+            var url = getRequestPath() + '/proposal/listAppProposal';
+
+            console.log(url);
+
+            var params = {
+                'loginName': $('#inputLoginName').val(),
+                'password': $('#inputPassword').val(),
+                'init': '1'
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    if (data.resultCode == 'success') {
+                        $scope.proposalList = data.proposalList;
+                    }
+                }
+            });
+        };
+
+        $scope.initPage = function () {
+            console.log($scope.name);
+
+            $scope.getProposalList();
+        };
+
+        $scope.initPage();
+
+    });
+</script>
+
+</body>
+</html>

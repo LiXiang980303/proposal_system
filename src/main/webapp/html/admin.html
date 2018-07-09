@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+    <label id="label">1111</label>
+    <button id="button" onclick="setLabelVal()" ></button>
+
+    <script type="text/javascript">
+        function setLabelVal() {
+            document.getElementById("label").innerText = "3333";
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var labelVal = '2222';
+            $("#label").html(labelVal);
+        });
+    </script>
+
+</body>
+</html>

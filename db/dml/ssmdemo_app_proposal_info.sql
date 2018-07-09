@@ -1,0 +1,3 @@
+INSERT INTO app_proposal_info (info_name, info_content, writer, submit_time, end_time, status, num_agree, num_disagree, update_time) VALUES ('关于提案评审的工作规范', '内容', 'TESTUSER001', NOW(), NOW(), '0', null, null, NOW());
+INSERT INTO app_proposal_info (info_name, info_content, writer, submit_time, end_time, status, num_agree, num_disagree, update_time) VALUES ('管理系统申请资格规范', '内容', 'TESTUSER001', NOW(), NOW(), '1', null, null, NOW());
+INSERT INTO app_proposal_info (info_name, info_content, writer, submit_time, end_time, status, num_agree, num_disagree, update_time) VALUES ('成立分组规范', '内容', 'TESTUSER001', NOW(), NOW(), '0', null, null, NOW());

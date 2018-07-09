@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>欢迎使用</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--<link rel="stylesheet" href="../css/bootstrap.min.css">-->
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="../css/signin.css">
+
+    <!-- js -->
+    <!--<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>-->
+    <!--<script type="text/javascript" src="../js/ui/bootstrap/js/bootstrap.min.js"></script>-->
+    <script type="text/javascript" src="../js/common/common.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+</head>
+<body>
+
+<div class="container" ng-app="indexApp" ng-controller="indexCtrl">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">规范文档管理系统</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"> 已登录
+                    <span class="glyphicon glyphicon-user"></span> {{loginInfo.loginName}}</a></li>
+                <li><a href="#" onclick="logout()">
+                    <span class="glyphicon glyphicon-log-in"></span> 退出</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div>
+
+        <ul id="myTab" class="nav nav-tabs">
+
+            <li class="dropdown">
+                <a href="#" id="tabDropWriter" class="dropdown-toggle"
+                   data-toggle="dropdown">写者 <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                    <li><a href="#infoQuery" tabindex="-1" data-toggle="tab">
+                        提案查询</a>
+                    </li>
+                    <!--<li><a href="#infoEdit" tabindex="-1" data-toggle="tab">-->
+                        <!--提案编制</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="#specificationQuery" tabindex="-1" data-toggle="tab">-->
+                        <!--规范查询</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="#specificationEdit" tabindex="-1" data-toggle="tab">-->
+                        <!--规范编制</a>-->
+                    <!--</li>-->
+                    <li><a href="#baseDataMgr" tabindex="-1" data-toggle="tab">
+                        信息维护</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" id="tabDropMgr" class="dropdown-toggle"
+                   data-toggle="dropdown">管理 <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                    <li><a href="#userMgr" tabindex="-1" data-toggle="tab" ng-click="listRegisterUser()">
+                        身份管理 </a>
+                    </li>
+                    <li><a href="#proposalApprove1" tabindex="-1" data-toggle="tab" ng-click="listAppProposal()">
+                        提案审批-推荐（专委会） </a>
+                    </li>
+                    <li><a href="#proposalApprove2" tabindex="-1" data-toggle="tab" ng-click="listAppProposal()">
+                        提案审批-备案（行业分会） </a>
+                    </li>
+                    <li><a href="#proposalApprove3" tabindex="-1" data-toggle="tab" ng-click="listAppProposal()">
+                        提案审批-立案（研究会） </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+        <div id="myTabContent" class="tab-content" >
+
+            <!--提案查询-->
+            <!--startPrint1-->
+            <div class="tab-pane fade in active" id="infoQuery">
+                <p style="margin-top: 5px;">提案列表</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" value="">全选</label>
+                                    </div>
+                                </td>
+                                <td>编号</td>
+                                <td>提案名称</td>
+                                <td>作者</td>
+                                <td>截止日期</td>
+                                <td>状态</td>
+                                <td>附议数</td>
+                                <td>反对数</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-repeat="info in proposalList">
+                                <td>
+                                    <label><input type="checkbox" class="iptSelect"></label>
+                                </td>
+                                <td>{{info.infoNo}}</td>
+                                <td><a href="#" ng-click="showProposalDtl(info)">{{info.infoName}}</a></td>
+                                <td>{{info.writer}}</td>
+                                <td>{{info.endTime | date:'yyyy-MM-dd hh:mm:ss'}}</td>
+                                <td>{{info.status}}</td>
+                                <td>{{info.numAgree}}</td>
+                                <td>{{info.numDisagree}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--endPrint1-->
+
+                <a type="button" class="btn btn-primary" ng-click="printProposal(1)">打印</a>
+                <a type="button" class="btn btn-primary" ng-click="repealProposal()">撤销</a>
+                <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">编制</a>
+            </div>
+
+            <!--提案编辑-->
+            <div class="tab-pane fade" id="infoEdit">
+                <p>iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple
+                    TV。iOS 派生自 OS X，它们共享 Darwin 基础。OS X 操作系统是用在苹果电脑上，iOS 是苹果的移动版本。</p>
+            </div>
+
+            <!--规范查询-->
+            <div class="tab-pane fade" id="specificationQuery">
+                <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
+            </div>
+
+            <!--规范编辑-->
+            <div class="tab-pane fade" id="specificationEdit">
+                <p>Enterprise Java Beans（EJB）是一个创建高度可扩展性和强大企业级应用程序的开发架构，部署在兼容应用程序服务器（比如 JBOSS、Web Logic 等）的 J2EE 上。
+                </p>
+            </div>
+
+            <!--信息维护-->
+            <div class="tab-pane fade" id="baseDataMgr">
+                <p style="margin-top: 5px;">信息维护</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <td>序号</td>
+                            <td>姓名</td>
+                            <td>单位</td>
+                            <td>职称</td>
+                            <td>职务</td>
+                            <td>电话</td>
+                            <td>邮箱</td>
+                            <td>微信</td>
+                        </tr>
+
+                        <tr>
+                            <td>01</td>
+                            <td>张三</td>
+                            <td>bjut</td>
+                            <td>教授</td>
+                            <td>校长</td>
+                            <td>21231231</td>
+                            <td>admin@123.com</td>
+                            <td>djxksmkm</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!--身份管理-->
+            <div class="tab-pane fade" id="userMgr">
+                <p style="margin-top: 5px;">身份管理</p>
+
+                <div class="table-responsive">
+
+                    姓名 <input ng-model="condtion.userName" class="form-control"/> <a class="btn btn-primary" ng-click="searchUser()">查询</a>
+
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" value="">全选</label>
+                                </div>
+                            </td>
+                            <td>编号</td>
+                            <td>姓名</td>
+                            <td>申请信息和推荐表</td>
+                        </tr>
+
+                        <tr ng-repeat="user in registerUserList">
+                            <td>
+                                <label><input type="checkbox" class="iptUserSelect"></label>
+                            </td>
+                            <td>{{user.userId}}</td>
+                            <td>{{user.userName}}</td>
+                            <td><a href="#" ng-click="showUserDtl(user)">查看</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!--提案审批-->
+            <div class="tab-pane fade in active" id="proposalApprove1">
+                <p style="margin-top: 5px;">提案审批-推荐（专委会）</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <td>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" value="">全选</label>
+                                </div>
+                            </td>
+                            <td>编号</td>
+                            <td>提案名称</td>
+                            <td>提案人</td>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="info in proposalList">
+                            <td>
+                                <label><input type="checkbox" class="iptUpgradeSelect"></label>
+                            </td>
+                            <td>{{info.infoNo}}</td>
+                            <td><a href="#" ng-click="showProposalDtl(info)">{{info.infoName}}</a></td>
+                            <td>{{info.writer}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <a type="button" class="btn btn-primary" ng-click="upgradeProposal()">推荐</a>
+            </div>
+
+            <div class="tab-pane fade in active" id="proposalApprove2">
+                <p style="margin-top: 5px;">提案审批-备案（行业分会）</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <td>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" value="">全选</label>
+                                </div>
+                            </td>
+                            <td>编号</td>
+                            <td>提案名称</td>
+                            <td>提案人</td>
+                            <td>专委会</td>
+                            <td>推荐人</td>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="info in proposalList">
+                            <td>
+                                <label><input type="checkbox" class="iptRecordSelect"></label>
+                            </td>
+                            <td>{{info.infoNo}}</td>
+                            <td><a href="#" ng-click="showProposalDtl(info)">{{info.infoName}}</a></td>
+                            <td>{{info.writer}}</td>
+                            <td>{{info.specialCommittee}}</td>
+                            <td>{{info.refer}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <a type="button" class="btn btn-primary" ng-click="recordProposal()">备案</a>
+            </div>
+
+            <!--startPrint2-->
+            <div class="tab-pane fade in active" id="proposalApprove3">
+                <p style="margin-top: 5px;">提案审批-立案（研究会）</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <td>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" value="">全选</label>
+                                </div>
+                            </td>
+                            <td>编号</td>
+                            <td>提案名称</td>
+                            <td>作者</td>
+                            <td>截止日期</td>
+                            <td>状态</td>
+                            <td>附议数</td>
+                            <td>反对数</td>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="info in proposalList">
+                            <td>
+                                <label><input type="checkbox" class="iptSelect"></label>
+                            </td>
+                            <td>{{info.infoNo}}</td>
+                            <td><a href="#" ng-click="showProposalDtl(info)">{{info.infoName}}</a></td>
+                            <td>{{info.writer}}</td>
+                            <td>{{info.endTime | date:'yyyy-MM-dd hh:mm:ss'}}</td>
+                            <td>{{info.status}}</td>
+                            <td>{{info.numAgree}}</td>
+                            <td>{{info.numDisagree}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--endPrint2-->
+
+                <a type="button" class="btn btn-primary" ng-click="printProposal(2)">打印</a>
+                <a type="button" class="btn btn-primary" ng-click="repealProposal()">撤销</a>
+                <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">编制</a>
+            </div>
+        </div>
+
+
+        <!-- 提案详情模态框（Modal） -->
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="infoModalLabel">
+                            提案详情
+                        </h4>
+                    </div>
+                    <div>
+                        <table class="table">
+                            <tr>
+                                <td><span>提案编号：</span><span>{{curInfo.infoNo}}</span></td>
+                                <td><span>提案名称：</span><span>{{curInfo.infoName}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>提案作者：</span><span>{{curInfo.writer}}</span></td>
+                                <td><span>截止日期：</span><span>{{curInfo.endTime | date:'yyyy-MM-dd hh:mm:ss'}}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span>提案内容：</span><span>{{curInfo.infoContent}}</span></td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2"><span><input class="form-control" ng-model="comment.content"/></span>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: right;">
+                                    <span>
+                                        <input type="radio" name="optionsRadiosinline" ng-model="comment.status" value="1">&nbsp;&nbsp;附议&nbsp;&nbsp;
+                                        <input type="radio" name="optionsRadiosinline" ng-model="comment.status" value="0">&nbsp;&nbsp;反对&nbsp;&nbsp;
+                                    </span>
+                                    <a type="button" class="btn btn-primary" ng-click="submitComment()">提交</a></td>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="modal-footer">
+                        <p>评论区</p>
+                        <table class="table">
+                            <tr><td>评论人</td><td>评论内容</td><td>时间</td></tr>
+                            <tr ng-repeat="comment in commentlList">
+                                <td>{{comment.commentUser}}</td>
+                                <td>{{comment.commentContent}}</td>
+                                <td>{{comment.commentTime | date:'yyyy-MM-dd hh:mm:ss'}}</td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">返回</button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <!-- 提案编辑模态框（Modal） -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="editModalLabel">
+                            提案编制
+                        </h4>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="newProposalName">提案名称</label>
+                            <input id="newProposalName" name="newProposalName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newProposalContent">提案内容</label>
+                            <textarea id="newProposalContent" name="newProposalContent" class="form-control"
+                                      placeholder="清输入内容"
+                                      rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="radio-inline">
+                                <input type="radio" name="optionReadMe" id="optionReadMe" value="true"> 我已阅读
+                                <font color="red">提案建议要求</font>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-click="printProposal()">打印</button>
+                        <button type="button" class="btn btn-primary" onclick="clearInfo(); return false">保存</button>
+                        <button type="button" class="btn btn-primary" ng-click="submitNewProposal()">提交</button>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <!-- 用户详情模态框（Modal） -->
+        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="userModalLabel">
+                            入会申请表
+                        </h4>
+                    </div>
+                    <div>
+                        <table class="table">
+                            <tr>
+                                <td><span>姓名：</span><span>{{curUser.userName}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>性别：</span><span>{{curUser.sex}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>出生日期：</span><span>{{curUser.birth}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>家庭住址：</span><span>{{curUser.address}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>联系方式：</span><span>{{curUser.userPhone}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>申请内容：</span><span>申请入会</span></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h4 class="modal-title">
+                        会员推荐表
+                    </h4>
+
+                    <div>
+                        <table class="table">
+                            <tr>
+                                <td><span>推荐人：</span><span>{{curUser.refer}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>单位：</span><span>{{curUser.referDept}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>电话：</span><span>{{curUser.referPhone}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>被推荐人：</span><span>{{curUser.userName}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>职称：</span><span>{{curUser.referJobTitle}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>职务：</span><span>{{curUser.referJobPosition}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>邮编：</span><span>{{curUser.referPostCode}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>推荐原因：</span><span>{{curInfo.referReason}}</span></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-primary" ng-click="userAgreeRefer(1)">同意</button>
+
+                        <button type="button" class="btn btn-primary" ng-click="userAgreeRefer(0)">拒绝</button>
+
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">返回</button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#myTab li:eq(1) a').tab('show');
+    });
+</script>
+
+<script type="text/javascript">
+
+    function clearInfo() {
+        $('#iptRegName').val('');
+        $('#iptRegSex').val('');
+        $('#iptRegBirth').val('');
+        $('#iptRegAdd').val('');
+        $('#iptRegPhone').val('');
+        $('#iptRegRef').val('');
+        $('#iptRegHyfh').val('');
+        $('#iptRegZwh').val('');
+    }
+
+    function hideEditModal() {
+        $('#editModal').modal('hide');
+    }
+
+    function showEditModal() {
+        $('#editModal').modal('show');
+    }
+
+    function hideInfoModal() {
+        $('#infoModal').modal('hide');
+    }
+
+    function showInfoModal() {
+        $('#infoModal').modal('show');
+    }
+
+    function showUserModal() {
+        $('#userModal').modal('show');
+    }
+
+    function hideUserModal() {
+        $('#userModal').modal('hide');
+    }
+
+    function logout() {
+        var url = getRequestPath() + '/login/logout';
+
+        console.log(url);
+
+        var params = {
+            'methodName': 'logout'
+        };
+
+        console.log(params);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: false,
+            data: params,
+            dataType: 'json',
+            error: function (data) {
+                alert(data.resultMesg);
+            },
+            success: function (data) {
+                alert(data.resultMesg);
+                var url = '/signin.html';
+                if (data.resultCode == 'success') {
+                    window.location.href = getRootPath() + url;
+                }
+            }
+        });
+    }
+
+    $(function () {
+        console.log("加载完成");
+    });
+
+</script>
+
+<script type="text/javascript">
+    var app = angular.module("indexApp", []);
+    app.controller("indexCtrl", function ($scope) {
+        $scope.name = "张三";
+        $scope.proposalList = {};
+        $scope.commentlList = {};
+        $scope.registerUserList = {};
+        $scope.loginInfo = {};
+
+        $scope.condtion = {};
+
+        $scope.curInfo = {};
+        $scope.curUser = {};
+
+        // status 0-拒绝 1-同意
+        $scope.userAgreeRefer = function (status) {
+
+            var url = getRequestPath() + '/user/userAgreeRefer';
+
+            console.log(url);
+
+            var params = {
+                'status': status,
+                'userId': $scope.curUser.userId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    alert(data.resultMesg);
+                    if (data.resultCode == 'success') {
+                        hideEditModal();
+                        $scope.refreshPage();
+                    }
+                }
+            });
+        };
+
+        $scope.showUserDtl = function (user) {
+            $scope.curUser = user;
+
+            showUserModal();
+        };
+
+        $scope.searchUser = function () {
+            var url = getRequestPath() + '/user/searchUser';
+
+            console.log(url);
+
+            var params = {
+                'userName': $scope.condtion.userName
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    if (data.resultCode == 'success') {
+                        $scope.registerUserList = data.searchUserList;
+                    }
+                }
+            });
+        };
+        
+        $scope.listRegisterUser = function () {
+            var url = getRequestPath() + '/user/listRegisterUser';
+
+            console.log(url);
+
+            var params = {
+                'methodName': 'listRegisterUser'
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    if (data.resultCode == 'success') {
+                        $scope.registerUserList = data.registerUserList;
+                    }
+                }
+            });
+        };
+
+        $scope.getProposaCommentlList = function () {
+            var url = getRequestPath() + '/proposal/listAppProposalComment';
+
+            console.log(url);
+
+            var params = {
+                'infoNo': $scope.curInfo.infoNo
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    if (data.resultCode == 'success') {
+                        $scope.commentlList = data.commentlList;
+                    }
+                }
+            });
+        };
+
+        $scope.getProposalList = function () {
+            var url = getRequestPath() + '/proposal/listAppProposal';
+
+            console.log(url);
+
+            var params = {
+                'loginName': $('#inputLoginName').val(),
+                'password': $('#inputPassword').val()
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    if (data.resultCode == 'success') {
+                        $scope.proposalList = data.proposalList;
+                    }
+                }
+            });
+        };
+
+        $scope.getLoginInfo = function () {
+            var url = getRequestPath() + '/login/getLoginInfo';
+
+            console.log(url);
+
+            var params = {
+                'curTime': '1'
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    if (data.resultCode == 'success') {
+                        $scope.loginInfo = data.loginInfo;
+                    }
+                }
+            });
+        };
+
+        $scope.refreshPage = function () {
+            console.log($scope.name);
+
+            // 获取登录信息
+            $scope.getLoginInfo();
+
+            // 获取提案列表
+            $scope.getProposalList();
+
+        };
+
+        $scope.submitComment = function () {
+            var url = getRequestPath() + '/proposal/submitComment';
+
+            console.log(url);
+
+            var params = {
+                'infoNo': $scope.curInfo.infoNo,
+                'commentContent': $scope.comment.content,
+                'status': $scope.comment.status
+            };
+
+            console.log(params);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    alert(data.resultMesg);
+                    if (data.resultCode == '200200') {
+                        hideInfoModal();
+                        $scope.refreshPage();
+                    }
+                }
+            });
+        };
+
+        $scope.showProposalDtl = function (info) {
+
+            $scope.curInfo = info;
+
+            // 获取对应的评论列表
+            $scope.getProposaCommentlList();
+
+            showInfoModal();
+        };
+
+        $scope.recordProposal = function () {
+            var infoNos = '';
+
+            var index = 0;
+            $('.iptRecordSelect').each(function () {
+                console.log($(this).prop('checked'));
+                if ($(this).prop('checked')) {
+                    console.log($scope.proposalList[index].infoNo);
+                    infoNos += $scope.proposalList[index].infoNo + ',';
+                }
+                index++;
+            });
+
+            if (infoNos.indexOf(',') <= 0) {
+                alert('请选择');
+                return;
+            }
+
+            var url = getRequestPath() + '/proposal/recordProposal';
+
+            console.log(url);
+
+            var params = {
+                'infoNos': infoNos
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    alert(data.resultMesg);
+                    if (data.resultCode == '200200') {
+                        hideEditModal();
+                        $scope.refreshPage();
+                    }
+                }
+            });
+        };
+
+        $scope.upgradeProposal = function () {
+            var infoNos = '';
+
+            var index = 0;
+            $('.iptUpgradeSelect').each(function () {
+                console.log($(this).prop('checked'));
+                if ($(this).prop('checked')) {
+                    console.log($scope.proposalList[index].infoNo);
+                    infoNos += $scope.proposalList[index].infoNo + ',';
+                }
+                index++;
+            });
+
+            if (infoNos.indexOf(',') <= 0) {
+                alert('请选择');
+                return;
+            }
+
+            var url = getRequestPath() + '/proposal/upgradeProposal';
+
+            console.log(url);
+
+            var params = {
+                'infoNos': infoNos
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    alert(data.resultMesg);
+                    if (data.resultCode == '200200') {
+                        hideEditModal();
+                        $scope.refreshPage();
+                    }
+                }
+            });
+        };
+
+        $scope.printProposalSelect = function (index) {
+            var selectNum = 0;
+            $('.iptSelect').each(function () {
+                console.log($(this).prop('checked'));
+                if ($(this).prop('checked')) {
+                    console.log($scope.proposalList[index].infoNo);
+                    infoNos += $scope.proposalList[index].infoNo + ',';
+                }
+                index++;
+            });
+        };
+        
+        $scope.printProposal = function (opt) {
+            if (opt < 10) {
+                bdhtml = window.document.body.innerHTML;//获取当前页的html代码
+                sprnstr = "<!--startPrint" + opt + "-->";//设置打印开始区域
+                eprnstr = "<!--endPrint" + opt + "-->";//设置打印结束区域
+                prnhtml = bdhtml.substring(bdhtml.indexOf(sprnstr) + 18); //从开始代码向后取html
+                prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr));//从结束代码向前取html
+                window.document.body.innerHTML = prnhtml;
+                window.print();
+                window.document.body.innerHTML = bdhtml;
+            } else {
+                window.print();
+            }
+        };
+
+        $scope.repealProposal = function () {
+
+            var infoNos = '';
+
+            var index = 0;
+            $('.iptSelect').each(function () {
+                console.log($(this).prop('checked'));
+                if ($(this).prop('checked')) {
+                    console.log($scope.proposalList[index].infoNo);
+                    infoNos += $scope.proposalList[index].infoNo + ',';
+                }
+                index++;
+            });
+
+            if (infoNos.indexOf(',') <= 0) {
+                alert('请选择');
+                return;
+            }
+
+            var url = getRequestPath() + '/proposal/repealProposal';
+
+            console.log(url);
+
+            var params = {
+                'infoNos': infoNos
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    alert(data.resultMesg);
+                    if (data.resultCode == '200200') {
+                        hideEditModal();
+                        $scope.refreshPage();
+                    }
+                }
+            });
+        };
+
+        $scope.submitNewProposal = function () {
+
+            console.log($('#optionReadMe').val());
+
+            if ($('#optionReadMe').val() == 'true') {
+
+            } else {
+                alert("请阅读相关要求");
+                return;
+            }
+
+            var url = getRequestPath() + '/proposal/submitNewProposal';
+
+            console.log(url);
+
+            var params = {
+                'proposalName': $('#newProposalName').val(),
+                'proposalContent': $('#newProposalName').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: params,
+                dataType: 'json',
+                error: function (data) {
+                    alert(data.resultMesg);
+                },
+                success: function (data) {
+                    alert(data.resultMesg);
+                    if (data.resultCode == '200200') {
+                        hideEditModal();
+                        $scope.refreshPage();
+                    }
+                }
+            });
+        };
+
+        $scope.refreshPage();
+
+    });
+</script>
+
+</body>
+</html>

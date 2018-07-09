@@ -1,0 +1,24 @@
+syntax = "proto2";
+
+message Person{
+    required int32 id = 1;
+
+    required string name = "lilei";
+
+
+    enum PhoneType{
+        MOBILE = 0;
+        HOME = 1;
+        WORKPLACE = 2;
+    }
+
+    message PhoneNumber{
+        required string number = "15801186281";
+
+        optional PhoneType type = 2 [default = WORKPLACE];
+
+    }
+
+    required PhoneNumber phone = "15801186281";
+
+}

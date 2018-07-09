@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proposal.dao.AppProposalInfoDao">
+
+    <!-- 插入数据 -->
+    <insert id="insertAppProposalInfo" parameterType="com.proposal.entity.AppProposalInfo">
+        INSERT INTO app_proposal_info
+          (info_name, info_content, writer, submit_time, end_time, status, record_no, priority)
+        VALUES
+          (#{infoName}, #{infoContent}, #{writer}, NOW(), DATE_SUB(NOW(), INTERVAL -5 DAY), #{status}, '0', 0)
+    </insert>
+
+    <!-- 更新提案信息 -->
+    <update id="updateAppProposalInfo" parameterType="java.util.Map">
+        UPDATE app_proposal_info SET
+        <if test="numAgree != null"> num_agree = #{numAgree}, </if>
+        <if test="numDisagree != null"> num_disagree = #{numDisagree}, </if>
+        <if test="status != null"> status = #{status}, </if>
+        <if test="recordNo != null"> record_no = #{recordNo}, </if>
+        <if test="recordUser != null"> record_user = #{recordUser}, </if>
+        <if test="priority != null"> priority = #{priority}, </if>
+        <if test="upgradeUser != null"> upgrade_user = #{upgradeUser}, </if>
+        update_time = NOW()
+        WHERE info_no in (#{infoNos})
+    </update>
+
+    <!-- 查询总数 -->
+    <select id="queryTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM app_proposal_info
+    </select>
+    <select id="queryAll" resultType="com.proposal.entity.AppProposalInfo">
+    SELECT
+      info_no,
+      info_name,
+      info_content,
+      writer,
+      submit_time,
+      end_time,
+      case when status = '0' then '编辑'
+           when status = '1' then '待审核'
+           when status = '2' then '通过'
+           when status = '3' then '未通过'
+      end status,
+      record_no,
+      record_user,
+      priority,
+      upgrade_user,
+      (SELECT count(*)
+       FROM app_proposal_comment pc
+       WHERE pc.info_no = p.info_no AND pc.status = '0') num_disagree,
+      (SELECT count(*)
+       FROM app_proposal_comment pc
+       WHERE pc.info_no = p.info_no AND pc.status = '1') num_agree
+    FROM app_proposal_info p
+    ORDER BY info_no ASC
+         limit #{offset}, #{limit}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="listAppProposalInfoByCondition"
+            parameterType="java.util.Map"
+            resultType="com.proposal.entity.AppProposalInfo">
+        SELECT * FROM app_proposal_info WHERE 1 = 1
+        <if test="writer != null">AND writer = #{writer}</if>
+        <if test="status != null">AND status = #{status}</if>
+        limit #{offset}, #{limit}
+    </select>
+
+
+    <!-- 插入数据 -->
+    <insert id="insertAppProposalComment" parameterType="com.proposal.entity.AppProposalComment">
+        INSERT INTO app_proposal_comment
+        (info_no, comment_content, comment_user, comment_time, status)
+        VALUES
+        (#{infoNo}, #{commentContent}, #{commentUser}, NOW(), #{status})
+    </insert>
+
+    <!-- 条件查询 -->
+    <select id="listAppProposalCommentByCondition"
+            parameterType="java.util.Map"
+            resultType="com.proposal.entity.AppProposalComment">
+        SELECT * FROM app_proposal_comment WHERE 1 = 1
+        <if test="commentUser != null">AND comment_user = #{commentUser}</if>
+        <if test="infoNo != null">AND info_no = #{infoNo}</if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <!-- 定义缓存 -->
+    <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true"/>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proposal.dao.AppUserDao">
+
+    <!-- 插入数据 -->
+    <insert id="insertUser">
+        INSERT INTO app_proposal_user
+          (user_name, login_name, user_phone, priority, birth, address, refer,
+          industry_branch, special_committee, sex, verify, password)
+        VALUES
+          (#{userName}, #{loginName}, #{userPhone}, #{priority}, #{birth}, #{address}, #{refer},
+          #{industryBranch}, #{specialCommittee}, #{sex}, #{verify}, #{password})
+    </insert>
+
+    <insert id="insertAppUser" parameterType="com.proposal.entity.AppUser">
+        INSERT INTO app_proposal_user
+        (user_name, login_name, user_phone, priority, birth, address, refer,
+        industry_branch, special_committee, sex, verify, password)
+        VALUES
+        (#{userName}, #{loginName}, #{userPhone}, #{priority}, #{birth}, #{address}, #{refer},
+        #{industryBranch}, #{specialCommittee}, #{sex}, #{verify}, #{password})
+    </insert>
+
+    <!-- 根据登录名获取用户信息 -->
+    <select id="queryByLoginName" resultType="AppUser">
+        SELECT * FROM app_proposal_user WHERE login_name = #{loginName} limit 1
+    </select>
+
+    <!-- 查询总数 -->
+    <select id="queryTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM app_proposal_user
+    </select>
+    <select id="queryAll" resultType="AppUser">
+        SELECT * FROM app_proposal_user ORDER BY user_id ASC limit #{offset}, #{limit}
+    </select>
+    <!--
+    <resultMap id="BaseResultMap" type="AppUser">
+        <id column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+        <result column="user_phone" property="userPhone" jdbcType="BIGINT"/>
+        <association property="totalCount" select="queryTotalCount" jdbcType="BIGINT"/>
+    </resultMap>
+    -->
+
+
+    <!-- 更新 priority -->
+    <update id="updatePriority">
+        UPDATE app_proposal_user SET priority = #{newPriority}
+    </update>
+
+    <!-- 条件查询 -->
+    <select id="queryByCondition" resultType="AppUser">
+        SELECT * FROM app_proposal_user WHERE 1 = 1
+        <if test="priority != null">AND priority = #{priority}</if>
+        <if test="userName != null">AND userName = #{userName}</if>
+        <if test="userPhone != null">AND userPhone = #{userPhone}</if>
+        <if test="loginName != null">AND userPhone = #{loginName}</if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <!-- 模糊查询 -->
+    <select id="queryFuzzy" resultType="AppUser">
+        SELECT * FROM app_proposal_user WHERE 1 = 1
+        <!--
+        AND (priority LIKE concat('%', #{priority}, '%')
+        or user_name LIKE concat('%', #{userName}, '%')
+        or user_phone LIKE concat('%', #{userPhone}, '%')
+        or login_name LIKE concat('%', #{loginName}, '%'))
+        -->
+        <bind name="priority" value="'%' + _parameter.priority + '%'"/>
+        <bind name="userName" value="'%' + _parameter.userName + '%'"/>
+        <bind name="userPhone" value="'%' + _parameter.userPhone + '%'"/>
+        <bind name="loginName" value="'%' + _parameter.loginName + '%'"/>
+
+        AND (priority LIKE #{priority}
+        or user_name LIKE #{userName}
+        or user_phone LIKE #{userPhone}
+        or login_name LIKE #{loginName})
+
+        ORDER BY user_id ASC limit #{offset}, #{limit}
+    </select>
+
+
+    <update id="updateAppProposalUser" parameterType="java.util.Map">
+        UPDATE app_proposal_user SET
+        <if test="verify != null"> verify = #{verify}, </if>
+        update_time = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 定义缓存 -->
+    <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true"/>
+</mapper>

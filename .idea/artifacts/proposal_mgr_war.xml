@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="proposal_mgr:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="proposal_mgr_0.0.1-SNAPSHOT_20180708.war">
+      <element id="artifact" artifact-name="proposal_mgr:war exploded" />
+    </root>
+  </artifact>
+</component>
