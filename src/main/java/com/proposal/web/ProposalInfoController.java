@@ -206,7 +206,7 @@ public class ProposalInfoController extends BaseController {
         Map params = new HashMap();
         try {
             params.put("offset", 0);
-            params.put("limit", 10);
+            params.put("limit", 100);
             params.put("infoNo", infoNo);
 
             List<AppProposalComment> list = appProposalInfoService.listAppProposalComment(params);

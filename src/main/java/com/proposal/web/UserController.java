@@ -1,6 +1,7 @@
 package com.proposal.web;
 
 import com.proposal.entity.AppProposalComment;
+import com.proposal.entity.AppProposalUserRefer;
 import com.proposal.entity.AppUser;
 import com.proposal.entity.User;
 import com.proposal.service.AppUserService;
@@ -41,7 +42,7 @@ public class UserController extends BaseController{
 	public String list(Model model, Integer offset, Integer limit) {
 		LOG.info("invoke----------/user/list");
 		offset = offset == null ? 0 : offset;//默认便宜0
-		limit = limit == null ? 50 : limit;//默认展示50条
+		limit = limit == null ? 100 : limit;//默认展示50条
 		List<User> list = userService.getUserList(offset, limit);
 		model.addAttribute("userlist", list);
 		return "userlist";
@@ -60,7 +61,7 @@ public class UserController extends BaseController{
 		Map params = new HashMap();
 		try {
 			params.put("offset", 0);
-			params.put("limit", 10);
+			params.put("limit", 100);
 			params.put("infoNo", infoNo);
 
 			List<AppUser> list = appUserService.listAppUser(0, 1000);
@@ -82,10 +83,10 @@ public class UserController extends BaseController{
 		Map params = new HashMap();
 		try {
 			params.put("offset", 0);
-			params.put("limit", 10);
+			params.put("limit", 100);
 			params.put("userName", userName);
 
-			AppUser user = appUserService.getAppUserByLoginName(userName);
+			AppUser user = appUserService.queryUserRefer(userName);
 			List<AppUser> list = new ArrayList<>();
 			list.add(user);
 			resMap.put("searchUserList", list);
@@ -106,11 +107,35 @@ public class UserController extends BaseController{
 		Map params = new HashMap();
 		try {
 			params.put("offset", 0);
-			params.put("limit", 10);
+			params.put("limit", 100);
 			params.put("verify", status);
 			params.put("userId", userId);
 
 			resMap = appUserService.userAgreeRefer(params);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return JsonUtils.transObject2Json(resMap);
+	}
+
+	@RequestMapping(value = "/submitNewRefer", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String submitNewRefer(HttpServletRequest request, HttpServletResponse response,
+								 AppProposalUserRefer refer) {
+		LOG.info("invoke -------- /user/submitNewRefer");
+		response.setContentType("text/html;charset=utf-8");
+		Map<String, Object> resMap = new HashMap<String, Object>();
+		resMap.put(RESULT_CODE, RESULT_CODE_SUCCESS);
+		Map params = new HashMap();
+		try {
+
+			params.put("refer", refer);
+
+			int x = appUserService.submitNewRefer(params);
+
+			if (x >= 1) {
+				resMap.put(RESULT_MESG, "成功");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
