@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proposal.dao.AppProposalUserReferDao">
+
+    <!-- 插入数据 -->
+    <insert id="insertAppProposalUserRefer" parameterType="com.proposal.entity.AppProposalUserRefer">
+        INSERT INTO app_proposal_user_refer
+          (refer_name, create_time, update_time, refer_department, refer_phone, refer_job_title,
+           refer_job_position, refer_post_code, refer_user, refer_reason, status, priority)
+        VALUES
+          (#{referName}, NOW(), NOW(), #{referDepartment}, #{referPhone}, #{referJobTitle},
+           #{referJobPosition}, #{referPostCode}, #{referUser}, #{referReason},
+           #{status}, #{priority})
+    </insert>
+
+    <!-- 定义缓存 -->
+    <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true"/>
+</mapper>
